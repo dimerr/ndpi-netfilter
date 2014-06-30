@@ -1,0 +1,54 @@
+Author: Dmitry E. <pk@dimer.org.ua>
+Comment: This patch removes AYIYA protocol detection support in order to successfully build ndpi-netfilter module
+
+Index: src/lib/ndpi_main.c
+===================================================================
+--- src/lib/ndpi_main.c	(revision 7618)
++++ src/lib/ndpi_main.c	(working copy)
+@@ -934,9 +934,9 @@
+   ndpi_set_proto_defaults(ndpi_mod, NDPI_PROTOCOL_IRC, "IRC",
+ 			  ndpi_build_default_ports(ports_a, 194, 0, 0, 0, 0) /* TCP */,
+ 			  ndpi_build_default_ports(ports_b, 194, 0, 0, 0, 0) /* UDP */);
+-  ndpi_set_proto_defaults(ndpi_mod, NDPI_PROTOCOL_AYIYA, "Ayiya",
+-			  ndpi_build_default_ports(ports_a, 0, 0, 0, 0, 0) /* TCP */,
+-			  ndpi_build_default_ports(ports_b, 5072, 0, 0, 0, 0) /* UDP */);
++//  ndpi_set_proto_defaults(ndpi_mod, NDPI_PROTOCOL_AYIYA, "Ayiya",
++//			  ndpi_build_default_ports(ports_a, 0, 0, 0, 0, 0) /* TCP */,
++//			  ndpi_build_default_ports(ports_b, 5072, 0, 0, 0, 0) /* UDP */);
+   ndpi_set_proto_defaults(ndpi_mod, NDPI_PROTOCOL_UNENCRYPED_JABBER, "Unencryped_Jabber",
+ 			  ndpi_build_default_ports(ports_a, 0, 0, 0, 0, 0) /* TCP */,
+ 			  ndpi_build_default_ports(ports_b, 0, 0, 0, 0, 0) /* UDP */);
+@@ -1229,7 +1229,7 @@
+ 
+   for(i=0; i<(int)ndpi_mod->ndpi_num_supported_protocols; i++) {
+     if(ndpi_mod->proto_defaults[i].protoName == NULL) {
+-      printf("[NDPI] %s(missing protoId=%d) INTERNAL ERROR: not all protocols have been initialized\n", __FUNCTION__, i);
++      //printf("[NDPI] %s(missing protoId=%d) INTERNAL ERROR: not all protocols have been initialized\n", __FUNCTION__, i);
+     }
+   }
+ }
+Index: src/include/ndpi_protocols_osdpi.h
+===================================================================
+--- src/include/ndpi_protocols_osdpi.h	(revision 7618)
++++ src/include/ndpi_protocols_osdpi.h	(working copy)
+@@ -116,7 +116,7 @@
+ #define NDPI_PROTOCOL_THUNDER					62
+ #define NDPI_PROTOCOL_SOULSEEK				        63
+ #define NDPI_PROTOCOL_IRC					65
+-#define NDPI_PROTOCOL_AYIYA					66
++//#define NDPI_PROTOCOL_AYIYA					66
+ #define NDPI_PROTOCOL_UNENCRYPED_JABBER			        67
+ #define NDPI_PROTOCOL_MSN					68
+ #define NDPI_PROTOCOL_OSCAR					69
+Index: src/include/ndpi_protocols.h
+===================================================================
+--- src/include/ndpi_protocols.h	(revision 7618)
++++ src/include/ndpi_protocols.h	(working copy)
+@@ -118,7 +118,6 @@
+ void ndpi_search_qq(struct ndpi_detection_module_struct *ndpi_struct, struct ndpi_flow_struct *flow);
+ void ndpi_search_feidian(struct ndpi_detection_module_struct *ndpi_struct, struct ndpi_flow_struct *flow);
+ void ndpi_search_ssh_tcp(struct ndpi_detection_module_struct *ndpi_struct, struct ndpi_flow_struct *flow);
+-void ndpi_search_ayiya(struct ndpi_detection_module_struct *ndpi_struct, struct ndpi_flow_struct *flow);
+ void ndpi_search_thunder(struct ndpi_detection_module_struct *ndpi_struct, struct ndpi_flow_struct *flow);
+ void ndpi_search_activesync(struct ndpi_detection_module_struct *ndpi_struct, struct ndpi_flow_struct *flow);
+ void ndpi_search_in_non_tcp_udp(struct ndpi_detection_module_struct *ndpi_struct, struct ndpi_flow_struct *flow);

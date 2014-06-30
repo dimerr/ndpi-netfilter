@@ -552,7 +552,7 @@ ndpi_mt_check(const char *tablename,
 {
 	const struct xt_ndpi_mtinfo *info = matchinfo;
 
-	if (NDPI_BITMASK_IS_ZERO(info->flags)){
+	if (NDPI_BITMASK_IS_EMPTY(info->flags)){
 		pr_info("None selected protocol.\n");
 		return false;
 	}
@@ -568,7 +568,7 @@ ndpi_mt_check(const struct xt_mtchk_param *par)
 {
 	const struct xt_ndpi_mtinfo *info = par->matchinfo;
 
-	if (NDPI_BITMASK_IS_ZERO(info->flags)){
+	if (NDPI_BITMASK_IS_EMPTY(info->flags)){
 		pr_info("None selected protocol.\n");
 		return false;
 	}
@@ -578,12 +578,13 @@ ndpi_mt_check(const struct xt_mtchk_param *par)
 	return nf_ct_l3proto_try_module_get (par->family) == 0;
 }
 #else
-static int
+static int 
 ndpi_mt_check(const struct xt_mtchk_param *par)
 {
 	const struct xt_ndpi_mtinfo *info = par->matchinfo;
 
-	if (NDPI_BITMASK_IS_ZERO(info->flags)){
+	if (NDPI_BITMASK_IS_EMPTY(info->flags)){
+	//if (info->flags){
 		pr_info("None selected protocol.\n");
 		return -EINVAL;
 	}
@@ -675,10 +676,10 @@ static int __init ndpi_mt_init(void)
 {
         int ret, i;
 
-	pr_info("xt_ndpi 0.1 (nDPI wrapper module).\n");
+	pr_info("xt_ndpi 0.2 (nDPI wrapper module).\n");
 	/* init global detection structure */
 	ndpi_struct = ndpi_init_detection_module(detection_tick_resolution,
-                                                     malloc_wrapper, debug_printf);
+                                                     malloc_wrapper, free_wrapper, debug_printf);
 	if (ndpi_struct == NULL) {
 		pr_err("xt_ndpi: global structure initialization failed.\n");
                 ret = -ENOMEM;
@@ -748,7 +749,7 @@ err_out:
 
 static void __exit ndpi_mt_exit(void)
 {
-	pr_info("xt_ndpi 1.2 unload.\n");
+	pr_info("xt_ndpi 0.2 unload.\n");
 
 	xt_unregister_match(&ndpi_mt_reg);
 
